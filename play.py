@@ -17,29 +17,29 @@ st.markdown("""
 header[data-testid="stHeader"]{background:transparent}
 h1,h2,h3{color:#F9FAFB!important;font-weight:800!important}
 p,label{color:#E5E7EB}
-.stButton button{background:#3B82F6;color:white;border:1px solid #3B82F6;border-radius:9px;font-weight:700;min-height:40px}
-.stButton button:hover{background:#2563EB;color:white;border-color:#60A5FA}
-.stTextInput input,.stDateInput input{background:#1F2937;color:#F9FAFB;border:1px solid #475569;border-radius:8px}
-.stSelectbox div[data-baseweb="select"]{background:#1F2937;color:#F9FAFB;border-radius:8px}
-div[data-testid="stMetric"]{background:#1F2937;border:1px solid #374151;border-left:4px solid #3B82F6;border-radius:12px;padding:17px}
+.stButton button{background:#3B82F6;color:white;border:1px solid #3B82F6;border-radius:16px;font-weight:700;min-height:43px;transition:.2s}
+.stButton button:hover{background:#2563EB;color:white;border-color:#60A5FA;transform:translateY(-1px)}
+.stTextInput input,.stDateInput input{background:#1F2937;color:#F9FAFB;border:1px solid #475569;border-radius:14px;min-height:42px}
+.stSelectbox div[data-baseweb="select"]{background:#1F2937;color:#F9FAFB;border-radius:14px}
+div[data-testid="stMetric"]{background:#1F2937;border:1px solid #374151;border-left:4px solid #3B82F6;border-radius:20px;padding:18px}
 div[data-testid="stMetricLabel"]{color:#9CA3AF}
 div[data-testid="stMetricValue"]{color:#F9FAFB}
-div[data-testid="stExpander"]{background:#1F2937;border:1px solid #374151;border-radius:10px}
-div[data-testid="stFileUploader"]{background:#1F2937;border:1px dashed #64748B;border-radius:10px;padding:10px}
-div[data-testid="stForm"]{background:#1F2937;border:1px solid #374151;border-radius:12px;padding:16px}
+div[data-testid="stExpander"]{background:#1F2937;border:1px solid #374151;border-radius:18px}
+div[data-testid="stFileUploader"]{background:#1F2937;border:1px dashed #64748B;border-radius:18px;padding:12px}
+div[data-testid="stForm"]{background:#1F2937;border:1px solid #374151;border-radius:18px;padding:17px}
 hr{border-color:#374151}
-.game-card{background:#1F2937;border:1px solid #374151;border-radius:12px;padding:15px;margin-bottom:10px}
-.game-title{font-size:21px;font-weight:800;color:#F9FAFB;margin:9px 0}
-.status-available{display:inline-block;background:#14532D;color:#86EFAC;padding:5px 11px;border-radius:6px;font-size:13px;font-weight:800}
-.status-rented{display:inline-block;background:#78350F;color:#FDE68A;padding:5px 11px;border-radius:6px;font-size:13px;font-weight:800}
-.top-banner{background:linear-gradient(120deg,#172554,#1E3A8A,#1F2937);border:1px solid #334155;border-radius:13px;padding:22px 25px;margin-bottom:20px}
+.top-banner{background:linear-gradient(120deg,#172554,#1E3A8A,#1F2937);border:1px solid #334155;border-radius:24px;padding:25px 28px;margin-bottom:22px}
 .top-banner h1{color:white!important;margin:0}
-.top-banner p{color:#BFDBFE;margin:6px 0 0}
+.top-banner p{color:#BFDBFE;margin:7px 0 0}
+.game-title{font-size:22px;font-weight:800;color:#F9FAFB;margin:12px 0}
+.status-available{display:inline-block;background:#14532D;color:#86EFAC;padding:7px 13px;border-radius:20px;font-size:13px;font-weight:800}
+.status-rented{display:inline-block;background:#78350F;color:#FDE68A;padding:7px 13px;border-radius:20px;font-size:13px;font-weight:800}
 .section-label{font-size:13px;font-weight:800;color:#94A3B8;letter-spacing:1px}
-.stTabs [data-baseweb="tab-list"]{gap:8px}
-.stTabs [data-baseweb="tab"]{background:#1F2937;border-radius:8px;color:#D1D5DB;padding:10px 16px}
+.stTabs [data-baseweb="tab-list"]{gap:9px}
+.stTabs [data-baseweb="tab"]{background:#1F2937;border-radius:15px;color:#D1D5DB;padding:11px 17px}
 .stTabs [aria-selected="true"]{background:#1D4ED8!important;color:white!important}
 [data-testid="stMarkdownContainer"]{color:#E5E7EB}
+div[data-testid="stVerticalBlockBorderWrapper"]{border-radius:22px!important;border-color:#374151!important;background:#1F2937}
 </style>
 """,unsafe_allow_html=True)
 
@@ -124,7 +124,7 @@ tab1,tab2=st.tabs(["📋 보드게임 관리","➕ 보드게임 등록"])
 
 with tab1:
     st.subheader("보드게임 목록")
-    st.caption("보드게임별 대여 현황을 확인하고 대여 및 반납을 관리할 수 있습니다.")
+    st.caption("보드게임을 선택해 대여하거나 반납할 수 있습니다.")
 
     c1,c2=st.columns([2,1])
     with c1:
@@ -165,68 +165,27 @@ with tab1:
 
                         if status=="대여 중":
                             st.markdown('<span class="status-rented">● 대여 중</span>',unsafe_allow_html=True)
-                            st.write(f"👤 대여자: {borrower or '미입력'}")
-                            st.write(f"📅 대여일: {rental_date or '-'}")
-                            st.write(f"🏁 반납 예정일: {return_date or '-'}")
+                            st.write(f"👤 **대여자:** {borrower or '미입력'}")
+                            st.write(f"📅 **대여일:** {rental_date or '-'}")
+                            st.write(f"🏁 **반납 예정일:** {return_date or '-'}")
+
+                            if st.button("↩️ 반납 처리",key=f"return_{game_id}",use_container_width=True):
+                                update_rental(game_id,"","대여 가능",None,None)
+                                st.success("반납 처리가 완료되었어요!")
+                                st.rerun()
+
                         else:
                             st.markdown('<span class="status-available">● 대여 가능</span>',unsafe_allow_html=True)
 
-                        with st.expander("📝 대여 정보 관리"):
-                            if status=="대여 중":
-                                st.info(f"현재 {borrower}님이 대여 중입니다.")
+                            with st.expander("🎉 대여하기"):
+                                with st.form(f"rental_form_{game_id}"):
+                                    new_borrower=st.text_input("👤 대여자 이름",placeholder="대여하는 사람의 이름")
+                                    new_rental=st.date_input("📅 대여일",value=date.today())
+                                    new_return=st.date_input("🏁 반납 예정일",value=date.today())
 
-                            with st.form(f"rental_form_{game_id}"):
-                                new_status=st.selectbox(
-                                    "대여 상태",
-                                    ["대여 가능","대여 중"],
-                                    index=0 if status=="대여 가능" else 1,
-                                    key=f"status_{game_id}"
-                                )
+                                    submitted=st.form_submit_button("대여 정보 저장하기",use_container_width=True)
 
-                                if status=="대여 중" and rental_date:
-                                    try:
-                                        default_rental=date.fromisoformat(rental_date)
-                                    except ValueError:
-                                        default_rental=date.today()
-                                else:
-                                    default_rental=date.today()
-
-                                if status=="대여 중" and return_date:
-                                    try:
-                                        default_return=date.fromisoformat(return_date)
-                                    except ValueError:
-                                        default_return=date.today()
-                                else:
-                                    default_return=date.today()
-
-                                new_borrower=""
-                                new_rental=None
-                                new_return=None
-
-                                if new_status=="대여 중":
-                                    new_borrower=st.text_input(
-                                        "대여자 이름",
-                                        value=borrower or "",
-                                        key=f"borrower_{game_id}"
-                                    )
-                                    new_rental=st.date_input(
-                                        "대여일",
-                                        value=default_rental,
-                                        key=f"rental_{game_id}"
-                                    )
-                                    new_return=st.date_input(
-                                        "반납 예정일",
-                                        value=default_return,
-                                        key=f"return_{game_id}"
-                                    )
-
-                                submitted=st.form_submit_button(
-                                    "💾 대여 정보 저장",
-                                    use_container_width=True
-                                )
-
-                                if submitted:
-                                    if new_status=="대여 중":
+                                    if submitted:
                                         if not new_borrower.strip():
                                             st.error("대여자 이름을 입력해 주세요.")
                                         elif new_return<new_rental:
@@ -239,18 +198,8 @@ with tab1:
                                                 new_rental.isoformat(),
                                                 new_return.isoformat()
                                             )
-                                            st.success("대여 정보가 저장되었어요!")
+                                            st.success("대여 처리가 완료되었어요!")
                                             st.rerun()
-                                    else:
-                                        update_rental(
-                                            game_id,
-                                            "",
-                                            "대여 가능",
-                                            None,
-                                            None
-                                        )
-                                        st.success("반납 처리가 완료되었어요!")
-                                        st.rerun()
 
                         with st.expander("🗑️ 보드게임 삭제"):
                             st.warning("삭제하면 해당 보드게임과 대여 정보가 함께 삭제됩니다.")
@@ -265,11 +214,7 @@ with tab2:
 
     with st.form("add_game_form",clear_on_submit=True):
         name=st.text_input("🎲 보드게임 이름",placeholder="예: 루미큐브")
-        image_file=st.file_uploader(
-            "📸 보드게임 사진 업로드",
-            type=["jpg","jpeg","png","webp"]
-        )
-
+        image_file=st.file_uploader("📸 보드게임 사진 업로드",type=["jpg","jpeg","png","webp"])
         submitted=st.form_submit_button("💖 보드게임 등록하기",use_container_width=True)
 
         if submitted:
@@ -287,7 +232,7 @@ with tab2:
 st.divider()
 
 st.markdown("""
-<div style="text-align:center;color:#94A3B8;padding:12px;font-size:13px">
+<div style="text-align:center;color:#94A3B8;padding:15px;font-size:13px">
 BOARD GAME MANAGER · 신나는 보드게임, 체계적인 관리 🎲
 </div>
 """,unsafe_allow_html=True)
