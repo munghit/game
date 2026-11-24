@@ -34,22 +34,25 @@ def google_sync(data):
             method="POST"
         )
 
-        with urllib.request.urlopen(req,timeout=20) as response:
+        with urllib.request.urlopen(req,timeout=30) as response:
             result=response.read().decode("utf-8")
 
         try:
             result_json=json.loads(result)
-            if result_json.get("success") is False:
-                return False,result_json.get("message","Google Sheets 저장 실패")
-            if result_json.get("status")=="error":
-                return False,result_json.get("message","Google Sheets 저장 실패")
         except json.JSONDecodeError:
-            pass
+            return False,"Apps Script 응답이 JSON 형식이 아닙니다: "+result[:300]
+
+        if result_json.get("success") is not True:
+            return False,result_json.get("message","Google Sheets 저장 실패")
 
         return True,"Google Sheets에 기록했습니다."
 
+    except urllib.error.HTTPError as e:
+        detail=e.read().decode("utf-8",errors="replace")
+        return False,f"HTTP 오류 {e.code}: {detail[:300]}"
+
     except Exception as e:
-        return False,str(e)
+        return False,f"{type(e).__name__}: {e}"
 
 
 # -----------------------------
@@ -273,6 +276,18 @@ def delete_game(game_id):
 # -----------------------------
 init_db()
 
+# Google Sheets 전송 결과 표시
+if "google_sync_notice" in st.session_state:
+    kind,message=st.session_state.pop("google_sync_notice")
+
+    if kind=="success":
+        st.success(message)
+    elif kind=="error":
+        st.error(message)
+    else:
+        st.info(message)
+
+
 st.title("🎲 보드게임 대여 관리")
 st.caption("학교 보드게임 대여 및 반납 기록 관리")
 
@@ -397,18 +412,23 @@ else:
                                             return_date.isoformat()
                                         )
 
-                                        st.success("저장되었습니다.")
-
-                                        if result:
+                                        if result is None:
+                                            st.session_state["google_sync_notice"]=(
+                                                "info",
+                                                "대여 정보가 저장되었습니다. Google Sheets 전송은 실행되지 않았습니다."
+                                            )
+                                        else:
                                             success,message=result
 
                                             if success:
-                                                st.success(message)
+                                                st.session_state["google_sync_notice"]=(
+                                                    "success",
+                                                    message
+                                                )
                                             else:
-                                                st.warning(
-                                                    "사이트에는 저장했지만 "
-                                                    "구글 시트 전송에 실패했습니다: "
-                                                    +message
+                                                st.session_state["google_sync_notice"]=(
+                                                    "error",
+                                                    "Google Sheets 전송 실패: "+message
                                                 )
 
                                         st.rerun()
